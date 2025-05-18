@@ -17,7 +17,7 @@
   ~ under the License.
   ~
 -->
-# openserveless-controller
+# openserveless-build
 
 This repo builds the OpenWhisk controller that is the core of OpenWhisk and publishes the images in the GitHub docker registry.
 
