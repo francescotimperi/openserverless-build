@@ -156,13 +156,13 @@ tasks:
       echo "***" {{.ACT}} for {{.IMG}} in {{.DIR}}
       case "{{.ACT}}" in
       (build)
-      docker build {{.DIR}} -t {{.IMG}} --build-arg OW_BASE_IMAGE={{.BASE}} --push
+      docker build {{.DIR}} -t {{.IMG}} --build-arg BASE={{.BASE}} --push
       ;;
       (buildx) 
-      docker buildx build --platform linux/amd64,linux/arm64 --build-arg OW_BASE_IMAGE={{.BASE}} -t {{.IMG}} {{.DIR}}
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg BASE={{.BASE}} -t {{.IMG}} {{.DIR}}
       ;;
       (buildx-push) 
-      docker buildx build --platform linux/amd64,linux/arm64 --build-arg OW_BASE_IMAGE={{.BASE}} -t {{.IMG}} {{.DIR}} --push 
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg BASE={{.BASE}} -t {{.IMG}} {{.DIR}} --push 
       ;;
       (*) echo ACT must be "build|buildx|buildx-push"
       esac
