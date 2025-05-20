@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,23 +16,4 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-_*
-attic/
-.vscode/
-.metals/
-docker/
-enterprise/controller/lib/
-enterprise/controller/bin/
-enterprise/invoker/lib/
-enterprise/invoker/bin/
-standalone/lib/
-standalone/exe/
-export/
-results/
-openwhisk-*/
-.env
-.git-hooks/
-.tag
-*.tar
-playground.*
-.secrets
+sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
