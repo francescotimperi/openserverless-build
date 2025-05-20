@@ -25,12 +25,14 @@ vars:
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD
   GHUSER:
-    sh: echo "${GITHUB_USER:-francescotimperi}"
-  CONTROLLER_IMAGE: ghcr.io/{{.GHUSER}}/openwhisk2-controller
-  INVOKER_IMAGE: ghcr.io/{{.GHUSER}}/openwhisk2-invoker
-  SCHEDULER_IMAGE: ghcr.io/{{.GHUSER}}/openwhisk2-scheduler
-  STANDALONE_IMAGE: ghcr.io/{{.GHUSER}}/openwhisk2-standalone
-  COMMON_IMAGE: ghcr.io/{{.GHUSER}}/openwhisk2-common
+    sh: echo "${GITHUB_USER:-apache}"
+  DOCKER_REGISTRY:
+    sh: echo "${GITHUB_USER:-apache}"
+  CONTROLLER_IMAGE: openwhisk2/controller
+  INVOKER_IMAGE: openwhisk2/invoker
+  SCHEDULER_IMAGE: openwhisk2/scheduler
+  STANDALONE_IMAGE: openwhisk2/standalone
+  COMMON_IMAGE: openwhisk2/scala
   ACT: "nothing"
   S: ""
 
@@ -50,7 +52,7 @@ tasks:
     silent: true
     cmds:
       - echo "tag:" {{.TAG}}
-      - echo "common:" {{.COMMON_IMAGE}}:{{.TAG}}
+      - echo "scala:" {{.COMMON_IMAGE}}:{{.TAG}}
       - echo "controller:" ${MY_CONTROLLER_IMAGE:-{{.CONTROLLER_IMAGE}}}:{{.TAG}}
       - echo "invoker:" ${MY_INVOKER_IMAGE:-{{.INVOKER_IMAGE}}}:{{.TAG}}
       - echo "scheduler:" ${MY_SCHEDULER_IMAGE:-{{.INVOKER_IMAGE}}}:{{.TAG}}
@@ -170,10 +172,8 @@ tasks:
       - task: docker-build
         vars:
           DIR: openwhisk/common/scala
-          IMG: "{{.COMMON_IMAGE}}:{{.TAG}}"          
-          ACT: '{{.ACT}}'
-          BASE: "{{.COMMON_IMAGE}}:latest" # not used
-      - docker tag {{.COMMON_IMAGE}}:{{.TAG}} scala:latest     
+          IMG: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"          
+          ACT: '{{.ACT}}'      
 
   build:controller:
     deps:
@@ -182,9 +182,9 @@ tasks:
       - task: docker-build
         vars:
           DIR: openwhisk/core/controller
-          IMG: "${MY_CONTROLLER_IMAGE:-{{.CONTROLLER_IMAGE}}}:{{.TAG}}"
+          IMG: "{{.DOCKER_REGISTRY}}/${MY_CONTROLLER_IMAGE:-{{.CONTROLLER_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT}}'
-          BASE: "{{.COMMON_IMAGE}}:latest"
+          BASE: "{{.COMMON_IMAGE}}:{{.TAG}}"
  
   build:invoker:
     deps:
@@ -193,7 +193,7 @@ tasks:
       - task: docker-build
         vars:
           DIR: openwhisk/core/invoker
-          IMG: "${MY_INVOKER_IMAGE:-{{.INVOKER_IMAGE}}}:{{.TAG}}"
+          IMG: "{{.DOCKER_REGISTRY}}/${MY_INVOKER_IMAGE:-{{.INVOKER_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT}}'
           BASE: "{{.COMMON_IMAGE}}:latest"
 
@@ -204,7 +204,7 @@ tasks:
       - task: docker-build
         vars:
           DIR: openwhisk/core/scheduler
-          IMG: "${MY_SCHEDULER_IMAGE:-{{.SCHEDULER_IMAGE}}}:{{.TAG}}"
+          IMG: "{{.DOCKER_REGISTRY}}/${MY_SCHEDULER_IMAGE:-{{.SCHEDULER_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT}}'
           BASE: "{{.COMMON_IMAGE}}:latest"          
   
@@ -215,7 +215,7 @@ tasks:
       - task: docker-build
         vars:
           DIR: standalone
-          IMG: "${MY_STANDALONE_IMAGE:-{{.STANDALONE_IMAGE}}}:{{.TAG}}"
+          IMG: "{{.DOCKER_REGISTRY}}/${MY_STANDALONE_IMAGE:-{{.STANDALONE_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT | or "build"}}'
           BASE: "{{.COMMON_IMAGE}}:latest"
   
@@ -257,7 +257,7 @@ tasks:
   distdocker:
     dir: openwhisk
     cmds:
-    - ./gradlew distDocker -PdockerRegistry={{.DOCKER_REGISTRY}} -PdockerImagePrefix=openwhisk2 -PdockerImageTag={{.TAG}}  -PdockerMultiArchBuild=true
+    - ./gradlew distDocker -PdockerMultiArchBuild=true -PdockerRegistry={{.DOCKER_REGISTRY}} -PdockerImagePrefix=openwhisk2 -PdockerImageTag={{.TAG}}
 
 
 
