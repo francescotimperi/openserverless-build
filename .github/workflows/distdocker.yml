@@ -58,7 +58,7 @@ jobs:
         if:  ${{ github.repository_owner != 'apache'}}
         run: |
           echo "REPO_URL=ghcr.io" >> "$GITHUB_ENV"
-          echo "REPO_PATH=$GITHUB_USER" >> "$GITHUB_ENV"
+          echo "REPO_PATH=${{ env.GITHUB_USER }}" >> "$GITHUB_ENV"
       - name: Use dockerhub
         if:  ${{ github.repository_owner == 'apache'}}
         run: |
