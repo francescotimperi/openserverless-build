@@ -78,4 +78,4 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Dist Docker
-        run: task distdocker TAG="$IMG_TAG" DOCKER_REGISTRY="${{ env.registry.hub.docker.com }}"
+        run: task distdocker TAG="$IMG_TAG" DOCKER_REGISTRY="${{ env.DOCKER_REGISTRY }}"
