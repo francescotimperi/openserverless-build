@@ -173,7 +173,7 @@ tasks:
         vars:
           DIR: openwhisk/common/scala
           IMG: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"          
-          ACT: '{{.ACT | or "build"}}'      
+          ACT: '{{.ACT}}'      
 
   build:controller:
     deps:
@@ -183,7 +183,7 @@ tasks:
         vars:
           DIR: openwhisk/core/controller
           IMG: "{{.DOCKER_REGISTRY}}/${MY_CONTROLLER_IMAGE:-{{.CONTROLLER_IMAGE}}}:{{.TAG}}"
-          ACT: '{{.ACT | or "build"}}'
+          ACT: '{{.ACT}}''
           BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
  
   build:invoker:
@@ -194,7 +194,7 @@ tasks:
         vars:
           DIR: openwhisk/core/invoker
           IMG: "{{.DOCKER_REGISTRY}}/${MY_INVOKER_IMAGE:-{{.INVOKER_IMAGE}}}:{{.TAG}}"
-          ACT: '{{.ACT | or "build"}}'
+          ACT: '{{.ACT}}'
           BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
 
   build:scheduler:
@@ -205,7 +205,7 @@ tasks:
         vars:
           DIR: openwhisk/core/scheduler
           IMG: "{{.DOCKER_REGISTRY}}/${MY_SCHEDULER_IMAGE:-{{.SCHEDULER_IMAGE}}}:{{.TAG}}"
-          ACT: '{{.ACT | or "build"}}'
+          ACT: '{{.ACT}}'
           BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"          
   
   build:standalone:
@@ -216,7 +216,7 @@ tasks:
         vars:
           DIR: standalone
           IMG: "{{.DOCKER_REGISTRY}}/${MY_STANDALONE_IMAGE:-{{.STANDALONE_IMAGE}}}:{{.TAG}}"
-          ACT: '{{.ACT | or "build"}}'
+          ACT: '{{.ACT}}'
           BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
   
   build-all:
