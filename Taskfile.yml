@@ -184,7 +184,7 @@ tasks:
           DIR: openwhisk/core/controller
           IMG: "{{.DOCKER_REGISTRY}}/${MY_CONTROLLER_IMAGE:-{{.CONTROLLER_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT}}'
-          BASE: "{{.COMMON_IMAGE}}:{{.TAG}}"
+          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
  
   build:invoker:
     deps:
@@ -195,7 +195,7 @@ tasks:
           DIR: openwhisk/core/invoker
           IMG: "{{.DOCKER_REGISTRY}}/${MY_INVOKER_IMAGE:-{{.INVOKER_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT}}'
-          BASE: "{{.COMMON_IMAGE}}:latest"
+          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:latest"
 
   build:scheduler:
     deps:
@@ -206,7 +206,7 @@ tasks:
           DIR: openwhisk/core/scheduler
           IMG: "{{.DOCKER_REGISTRY}}/${MY_SCHEDULER_IMAGE:-{{.SCHEDULER_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT}}'
-          BASE: "{{.COMMON_IMAGE}}:latest"          
+          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:latest"          
   
   build:standalone:
     deps:
@@ -217,7 +217,7 @@ tasks:
           DIR: standalone
           IMG: "{{.DOCKER_REGISTRY}}/${MY_STANDALONE_IMAGE:-{{.STANDALONE_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT | or "build"}}'
-          BASE: "{{.COMMON_IMAGE}}:latest"
+          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:latest"
   
   build-all:
     cmds:
