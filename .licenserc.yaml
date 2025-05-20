@@ -23,7 +23,9 @@ header:
   paths-ignore:
     - '**/.vscode/**'
     - '.git-hooks/*'
-    - 'LICENSE'
+    - '**/LICENSE'
+    - '**/DISCLAIMER'
+    - '**/NOTICE'
     - 'openwhisk/**'
     - 'openwhisk-*/**'
     - '**/*.patch'
