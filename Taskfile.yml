@@ -183,7 +183,7 @@ tasks:
         vars:
           DIR: openwhisk/core/controller
           IMG: "{{.DOCKER_REGISTRY}}/${MY_CONTROLLER_IMAGE:-{{.CONTROLLER_IMAGE}}}:{{.TAG}}"
-          ACT: '{{.ACT}}''
+          ACT: '{{.ACT}}'
           BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
  
   build:invoker:
