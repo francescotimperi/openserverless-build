@@ -21,18 +21,18 @@ dotenv:
   - .env
 
 vars:
-  BASETAG: 3.1.0-ops-incubating
+  BASETAG: ops-incubating
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD
   GHUSER:
     sh: echo "${GITHUB_USER:-apache}"
   DOCKER_REGISTRY:
     sh: echo "${GITHUB_USER:-apache}"
-  CONTROLLER_IMAGE: openwhisk2/controller
-  INVOKER_IMAGE: openwhisk2/invoker
-  SCHEDULER_IMAGE: openwhisk2/scheduler
-  STANDALONE_IMAGE: openwhisk2/standalone
-  COMMON_IMAGE: openwhisk2/scala
+  CONTROLLER_IMAGE: openwhisk2-controller
+  INVOKER_IMAGE: openwhisk2-invoker
+  SCHEDULER_IMAGE: openwhisk2-scheduler
+  STANDALONE_IMAGE: openwhisk2-standalone
+  COMMON_IMAGE: openwhisk2-scala
   ACT: "nothing"
   S: ""
 
@@ -173,7 +173,7 @@ tasks:
         vars:
           DIR: openwhisk/common/scala
           IMG: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"          
-          ACT: '{{.ACT}}'      
+          ACT: '{{.ACT | or "build"}}'      
 
   build:controller:
     deps:
@@ -183,7 +183,7 @@ tasks:
         vars:
           DIR: openwhisk/core/controller
           IMG: "{{.DOCKER_REGISTRY}}/${MY_CONTROLLER_IMAGE:-{{.CONTROLLER_IMAGE}}}:{{.TAG}}"
-          ACT: '{{.ACT}}'
+          ACT: '{{.ACT | or "build"}}'
           BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
  
   build:invoker:
@@ -194,8 +194,8 @@ tasks:
         vars:
           DIR: openwhisk/core/invoker
           IMG: "{{.DOCKER_REGISTRY}}/${MY_INVOKER_IMAGE:-{{.INVOKER_IMAGE}}}:{{.TAG}}"
-          ACT: '{{.ACT}}'
-          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:latest"
+          ACT: '{{.ACT | or "build"}}'
+          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
 
   build:scheduler:
     deps:
@@ -205,8 +205,8 @@ tasks:
         vars:
           DIR: openwhisk/core/scheduler
           IMG: "{{.DOCKER_REGISTRY}}/${MY_SCHEDULER_IMAGE:-{{.SCHEDULER_IMAGE}}}:{{.TAG}}"
-          ACT: '{{.ACT}}'
-          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:latest"          
+          ACT: '{{.ACT | or "build"}}'
+          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"          
   
   build:standalone:
     deps:
@@ -217,7 +217,7 @@ tasks:
           DIR: standalone
           IMG: "{{.DOCKER_REGISTRY}}/${MY_STANDALONE_IMAGE:-{{.STANDALONE_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT | or "build"}}'
-          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:latest"
+          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
   
   build-all:
     cmds:
