@@ -21,16 +21,18 @@ dotenv:
   - .env
 
 vars:
-  BASETAG: 3.1.0-ops-incubating
+  BASETAG: 2.0.0-ops-incubating
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD
   GHUSER:
-    sh: echo "${GITHUB_USER:-francescotimperi}"
-  CONTROLLER_IMAGE: ghcr.io/{{.GHUSER}}/openwhisk2-controller
-  INVOKER_IMAGE: ghcr.io/{{.GHUSER}}/openwhisk2-invoker
-  SCHEDULER_IMAGE: ghcr.io/{{.GHUSER}}/openwhisk2-scheduler
-  STANDALONE_IMAGE: ghcr.io/{{.GHUSER}}/openwhisk2-standalone
-  COMMON_IMAGE: ghcr.io/{{.GHUSER}}/openwhisk2-common
+    sh: echo "${GITHUB_USER:-apache}"
+  DOCKER_REGISTRY:
+    sh: echo "${GITHUB_USER:-apache}"
+  CONTROLLER_IMAGE: openwhisk2-controller
+  INVOKER_IMAGE: openwhisk2-invoker
+  SCHEDULER_IMAGE: openwhisk2-scheduler
+  STANDALONE_IMAGE: openwhisk2-standalone
+  COMMON_IMAGE: openwhisk2-scala
   ACT: "nothing"
   S: ""
 
@@ -50,7 +52,7 @@ tasks:
     silent: true
     cmds:
       - echo "tag:" {{.TAG}}
-      - echo "common:" {{.COMMON_IMAGE}}:{{.TAG}}
+      - echo "scala:" {{.COMMON_IMAGE}}:{{.TAG}}
       - echo "controller:" ${MY_CONTROLLER_IMAGE:-{{.CONTROLLER_IMAGE}}}:{{.TAG}}
       - echo "invoker:" ${MY_INVOKER_IMAGE:-{{.INVOKER_IMAGE}}}:{{.TAG}}
       - echo "scheduler:" ${MY_SCHEDULER_IMAGE:-{{.INVOKER_IMAGE}}}:{{.TAG}}
@@ -154,13 +156,13 @@ tasks:
       echo "***" {{.ACT}} for {{.IMG}} in {{.DIR}}
       case "{{.ACT}}" in
       (build)
-      docker build {{.DIR}} -t {{.IMG}} --build-arg OW_BASE_IMAGE={{.BASE}} --push
+      docker build {{.DIR}} -t {{.IMG}} --build-arg BASE={{.BASE}} --push
       ;;
       (buildx) 
-      docker buildx build --platform linux/amd64,linux/arm64 --build-arg OW_BASE_IMAGE={{.BASE}} -t {{.IMG}} {{.DIR}}
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg BASE={{.BASE}} -t {{.IMG}} {{.DIR}}
       ;;
       (buildx-push) 
-      docker buildx build --platform linux/amd64,linux/arm64 --build-arg OW_BASE_IMAGE={{.BASE}} -t {{.IMG}} {{.DIR}} --push 
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg BASE={{.BASE}} -t {{.IMG}} {{.DIR}} --push 
       ;;
       (*) echo ACT must be "build|buildx|buildx-push"
       esac
@@ -170,10 +172,8 @@ tasks:
       - task: docker-build
         vars:
           DIR: openwhisk/common/scala
-          IMG: "{{.COMMON_IMAGE}}:{{.TAG}}"          
-          ACT: '{{.ACT}}'
-          BASE: "{{.COMMON_IMAGE}}:latest" # not used
-      - docker tag {{.COMMON_IMAGE}}:{{.TAG}} scala:latest     
+          IMG: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"          
+          ACT: '{{.ACT}}'      
 
   build:controller:
     deps:
@@ -182,9 +182,9 @@ tasks:
       - task: docker-build
         vars:
           DIR: openwhisk/core/controller
-          IMG: "${MY_CONTROLLER_IMAGE:-{{.CONTROLLER_IMAGE}}}:{{.TAG}}"
+          IMG: "{{.DOCKER_REGISTRY}}/${MY_CONTROLLER_IMAGE:-{{.CONTROLLER_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT}}'
-          BASE: "{{.COMMON_IMAGE}}:latest"
+          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
  
   build:invoker:
     deps:
@@ -193,9 +193,9 @@ tasks:
       - task: docker-build
         vars:
           DIR: openwhisk/core/invoker
-          IMG: "${MY_INVOKER_IMAGE:-{{.INVOKER_IMAGE}}}:{{.TAG}}"
+          IMG: "{{.DOCKER_REGISTRY}}/${MY_INVOKER_IMAGE:-{{.INVOKER_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT}}'
-          BASE: "{{.COMMON_IMAGE}}:latest"
+          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
 
   build:scheduler:
     deps:
@@ -204,9 +204,9 @@ tasks:
       - task: docker-build
         vars:
           DIR: openwhisk/core/scheduler
-          IMG: "${MY_SCHEDULER_IMAGE:-{{.SCHEDULER_IMAGE}}}:{{.TAG}}"
+          IMG: "{{.DOCKER_REGISTRY}}/${MY_SCHEDULER_IMAGE:-{{.SCHEDULER_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT}}'
-          BASE: "{{.COMMON_IMAGE}}:latest"          
+          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"          
   
   build:standalone:
     deps:
@@ -215,9 +215,9 @@ tasks:
       - task: docker-build
         vars:
           DIR: standalone
-          IMG: "${MY_STANDALONE_IMAGE:-{{.STANDALONE_IMAGE}}}:{{.TAG}}"
-          ACT: '{{.ACT | or "build"}}'
-          BASE: "{{.COMMON_IMAGE}}:latest"
+          IMG: "{{.DOCKER_REGISTRY}}/${MY_STANDALONE_IMAGE:-{{.STANDALONE_IMAGE}}}:{{.TAG}}"
+          ACT: '{{.ACT}}'
+          BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
   
   build-all:
     cmds:
@@ -254,35 +254,10 @@ tasks:
       vars:
          ACT: "buildx-push"
 
-  actions:ow-unit-test:
-    dir: openwhisk
-    cmds:
-    - act -P ubuntu-22.04=ghcr.io/catthehacker/ubuntu:full-22.04 -v --env TEST_SUITE=Unit -W '.github/workflows/1-unit.yaml'
-
-  actions:ow-system-test:
-    dir: openwhisk
-    cmds:
-    - act -P ubuntu-22.04=ghcr.io/catthehacker/ubuntu:full-22.04 -v --env TEST_SUITE=System -W '.github/workflows/2-system.yaml'
-
-  actions:ow-multiruntime-test:
-    dir: openwhisk
-    cmds:
-    - act -P ubuntu-22.04=ghcr.io/catthehacker/ubuntu:full-22.04 -v --env TEST_SUITE=MultiRuntime -W '.github/workflows/4-multi-runtime.yaml'     
-
-  actions:ow-standalone-test:
-    dir: openwhisk
-    cmds:
-    - act -P ubuntu-22.04=ghcr.io/catthehacker/ubuntu:full-22.04 -v --env TEST_SUITE=Standalone -W '.github/workflows/4-standalone.yaml' 
-
-  actions:ow-scheduler-test:
-    dir: openwhisk
-    cmds:
-    - act -P ubuntu-22.04=ghcr.io/catthehacker/ubuntu:full-22.04 -v --env TEST_SUITE=scheduler -W '.github/workflows/5-scheduler.yaml'
-
   distdocker:
     dir: openwhisk
     cmds:
-    - ./gradlew distDocker -PdockerRegistry=ghcr.io/{{.GHUSER}} -PdockerImagePrefix=openwhisk2 -PdockerImageTag={{.TAG}}  -PdockerMultiArchBuild=true
+    - ./gradlew distDocker -PdockerMultiArchBuild=true -PdockerRegistry={{.DOCKER_REGISTRY}} -PdockerImagePrefix=openwhisk2 -PdockerImageTag={{.TAG}}
 
 
 

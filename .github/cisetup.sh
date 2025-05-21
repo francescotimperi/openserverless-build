@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,38 +16,4 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-header:
-  license:
-    spdx-id: Apache-2.0
-    copyright-owner: Apache Software Foundation
-
-  paths-ignore:
-    - '**/.vscode/**'
-    - '.git-hooks/*'
-    - '**/LICENSE'
-    - '**/DISCLAIMER'
-    - '**/NOTICE'
-    - 'openwhisk/**'
-    - 'openwhisk-*/**'
-    - '**/*.patch'
-    - 'launch.json'
-    - 'go.sum'
-    - '**/auth.*'
-    - '_*'
-    - '.env.dist'
-    - '.tag'
-    - 'Chart.lock'
-    - '.helmignore'
-    - '.gitkeep'
-    - '**/*.md.gotmpl'
-    - '**/*.json'
-    - '**/default.conf'
-    - '**/*.txt'
-    - '.gitmodules'
-
-
- 
-dependency:
-  files:
-    - go.mod
-    - package.json 
+sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin

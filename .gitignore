@@ -34,3 +34,4 @@ openwhisk-*/
 .tag
 *.tar
 playground.*
+.secrets
