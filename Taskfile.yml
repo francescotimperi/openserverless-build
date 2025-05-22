@@ -213,7 +213,7 @@ tasks:
     cmds:
       - task: docker-build
         vars:
-          DIR: standalone
+          DIR: openwhisk/core/standalone
           IMG: "{{.DOCKER_REGISTRY}}/${MY_STANDALONE_IMAGE:-{{.STANDALONE_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT}}'
           BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
