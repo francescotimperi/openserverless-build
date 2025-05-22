@@ -177,10 +177,10 @@ tasks:
       docker build {{.DIR}} -t {{.IMG}} --build-arg BASE={{.BASE}} --build-arg OPENWHISK_JAR={{.OPENWHISK_JAR}} --push
       ;;
       (buildx) 
-      docker buildx build --platform linux/amd64,linux/arm64 --build-arg OPENWHISK_JAR={{.OPENWHISK_JAR}} -t {{.IMG}} {{.DIR}}
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg BASE={{.BASE}} --build-arg OPENWHISK_JAR={{.OPENWHISK_JAR}} -t {{.IMG}} {{.DIR}}
       ;;
       (buildx-push) 
-      docker buildx build --platform linux/amd64,linux/arm64 --build-arg OPENWHISK_JAR={{.OPENWHISK_JAR}} -t {{.IMG}} {{.DIR}} --push 
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg BASE={{.BASE}} --build-arg OPENWHISK_JAR={{.OPENWHISK_JAR}} -t {{.IMG}} {{.DIR}} --push 
       ;;
       (*) echo ACT must be "build|buildx|buildx-push"
       esac      
