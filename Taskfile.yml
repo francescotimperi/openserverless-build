@@ -166,6 +166,25 @@ tasks:
       (*) echo ACT must be "build|buildx|buildx-push"
       esac
 
+  # this requires ACT IMG OPENWHISK_JAR and DIR parameters to be passed 
+  docker-build-standalone:
+    silent: true
+    cmds:
+    - |-
+      echo "***" {{.ACT}} for {{.IMG}} in {{.DIR}}
+      case "{{.ACT}}" in
+      (build)
+      docker build {{.DIR}} -t {{.IMG}} --build-arg BASE={{.BASE}} --build-arg OPENWHISK_JAR={{.OPENWHISK_JAR}} --push
+      ;;
+      (buildx) 
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg BASE={{.BASE}} --build-arg OPENWHISK_JAR={{.OPENWHISK_JAR}} -t {{.IMG}} {{.DIR}}
+      ;;
+      (buildx-push) 
+      docker buildx build --platform linux/amd64,linux/arm64 --build-arg BASE={{.BASE}} --build-arg OPENWHISK_JAR={{.OPENWHISK_JAR}} -t {{.IMG}} {{.DIR}} --push 
+      ;;
+      (*) echo ACT must be "build|buildx|buildx-push"
+      esac      
+
   build:scala:
     cmds:
       - task: docker-build
@@ -211,12 +230,13 @@ tasks:
     deps:
     - compile:standalone
     cmds:
-      - task: docker-build
+      - task: docker-build-standalone
         vars:
-          DIR: standalone
+          DIR: openwhisk/core/standalone
           IMG: "{{.DOCKER_REGISTRY}}/${MY_STANDALONE_IMAGE:-{{.STANDALONE_IMAGE}}}:{{.TAG}}"
           ACT: '{{.ACT}}'
           BASE: "{{.DOCKER_REGISTRY}}/{{.COMMON_IMAGE}}:{{.TAG}}"
+          OPENWHISK_JAR: "build/libs/openwhisk-standalone-1.0.1-SNAPSHOT.jar"
   
   build-all:
     cmds:
