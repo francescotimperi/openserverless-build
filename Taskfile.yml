@@ -21,18 +21,17 @@ dotenv:
   - .env
 
 vars:
-  BASETAG: 2.0.0-ops-incubating
+  BASETAG: 2.0.0-incubating
   TAG:
     sh: git describe --tags --abbrev=0 2>/dev/null || git rev-parse --short HEAD
   GHUSER:
     sh: echo "${GITHUB_USER:-apache}"
-  DOCKER_REGISTRY:
-    sh: echo "${GITHUB_USER:-apache}"
-  CONTROLLER_IMAGE: openwhisk2-controller
-  INVOKER_IMAGE: openwhisk2-invoker
-  SCHEDULER_IMAGE: openwhisk2-scheduler
-  STANDALONE_IMAGE: openwhisk2-standalone
-  COMMON_IMAGE: openwhisk2-scala
+  DOCKER_REGISTRY: registry.hub.docker.com/apache
+  CONTROLLER_IMAGE: openserverless-wsk-controller
+  INVOKER_IMAGE: openserverless-wsk-invoker
+  SCHEDULER_IMAGE: openserverless-wsk-scheduler
+  STANDALONE_IMAGE: openserverless-wsk-standalone
+  COMMON_IMAGE: openserverless-wsk-scala
   ACT: "nothing"
   S: ""
 
