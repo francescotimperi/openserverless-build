@@ -55,7 +55,7 @@ jobs:
           elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
             echo "GRAALVM_URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graalvm_version }}/graalvm-ce-java11-darwin-amd64-${{ matrix.graalvm_version }}.tar.gz" >> $GITHUB_ENV
             echo "GRAALVM_DIR=graalvm-ce-java11-darwin-amd64-${{ matrix.graalvm_version }}" >> $GITHUB_ENV
-            echo "GRAALVM_HOME=/opt/graalvm" >> $GITHUB_ENV
+            echo "GRAALVM_HOME=$PWD/graalvm" >> $GITHUB_ENV
           else
             echo "GRAALVM_URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graalvm_version }}/graalvm-ce-java11-windows-amd64-${{ matrix.graalvm_version }}.zip" >> $GITHUB_ENV
             echo "GRAALVM_DIR=graalvm-ce-java11-windows-amd64-${{ matrix.graalvm_version }}" >> $GITHUB_ENV
