@@ -68,8 +68,8 @@ jobs:
             curl -L -o graalvm.zip "$GRAALVM_URL"
             7z x graalvm.zip -o"$GRAALVM_DIR"
             echo "Setting JAVA_HOME to $PWD/$GRAALVM_DIR"
-            echo "JAVA_HOME=$PWD\$GRAALVM_DIR" >> $GITHUB_ENV
-            echo "$PWD\$GRAALVM_DIR\bin" >> $GITHUB_PATH
+            echo "JAVA_HOME=$PWD/$GRAALVM_DIR" >> $GITHUB_ENV
+            echo "$PWD/$GRAALVM_DIR/bin" >> $GITHUB_PATH
           else
             mkdir -p $GRAALVM_HOME
             curl -L -o /tmp/graalvm.tar.gz "$GRAALVM_URL"
@@ -79,17 +79,21 @@ jobs:
             echo "$GRAALVM_HOME/bin" >> $GITHUB_PATH
           fi
       - name: Verify GraalVM installation
+        shell: bash
         run: |
           java -version
           gu --version
 
       - name: Install native-image component
+        shell: bash
         run: |
           gu install native-image                            
       - name: Compile Standalone
+        shell: bash
         run: ./gradlew :core:standalone:build :core:standalone:copyRuntimeLibs 
         working-directory: openwhisk          
       - name: Define executable name
+        shell: bash
         id: vars
         run: |
           platform="${RUNNER_OS,,}"
@@ -100,6 +104,7 @@ jobs:
           esac
           echo "name=$name" >> $GITHUB_OUTPUT        
       - name: Build Native Standalone
+        shell: bash
         run: |
           mkdir -p ${{ github.workspace }}/standalone/native && \
           native-image \
@@ -113,6 +118,7 @@ jobs:
           org.apache.openwhisk.standalone.StandaloneOpenWhisk
       - name: Upload native executable
         uses: actions/upload-artifact@v4
+        shell: bash
         with:
           name: ${{ steps.vars.outputs.name }}
           path: standalone/native        
