@@ -93,7 +93,7 @@ tasks:
     cmds:
       - ./gradlew core:standalone:copyRuntimeLibs    
 
-  native:standalone-build:
+  native:standalone-full:
     deps:
     - compile:standalone
     - native:standalone-libs   
@@ -108,6 +108,19 @@ tasks:
       -H:ConfigurationFileDirectories=$PWD/../standalone/graal-config
       -o $PWD/../exe/{{.NATIVE_IMAGE}}
       org.apache.openwhisk.standalone.StandaloneOpenWhisk
+
+  native:standalone-build:  
+    dir: openwhisk/core/standalone
+    cmds:
+    - native-image
+      --initialize-at-run-time=io.netty     
+      --no-fallback --report-unsupported-elements-at-runtime
+      --trace-object-instantiation=ch.qos.logback.classic.Logger
+      --enable-url-protocols=http,https
+      -cp build/classes/scala/main:build/resources/main:build/dependency-libs/*
+      -H:ConfigurationFileDirectories=$PWD/../standalone/graal-config
+      -o $PWD/../exe/{{.NATIVE_IMAGE}}
+      org.apache.openwhisk.standalone.StandaloneOpenWhisk      
 
   native:standalone-run:
     dir: standalone/exe
