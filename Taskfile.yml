@@ -32,6 +32,7 @@ vars:
   SCHEDULER_IMAGE: openserverless-wsk-scheduler
   STANDALONE_IMAGE: openserverless-wsk-standalone
   COMMON_IMAGE: openserverless-wsk-scala
+  NATIVE_IMAGE: openserverless-standalone
   ACT: "nothing"
   S: ""
 
@@ -104,8 +105,8 @@ tasks:
       --trace-object-instantiation=ch.qos.logback.classic.Logger
       --enable-url-protocols=http,https
       -cp build/classes/scala/main:build/resources/main:build/dependency-libs/*
-      -H:ConfigurationFileDirectories=/workspaces/openserverless-controller/standalone/graal-config
-      -o /workspaces/openserverless-controller/standalone/exe/openwhisk-standalone.exe
+      -H:ConfigurationFileDirectories=$PWD/../standalone/graal-config
+      -o $PWD/../exe/{{.NATIVE_IMAGE}}
       org.apache.openwhisk.standalone.StandaloneOpenWhisk 
 
   native:standalone-run:
