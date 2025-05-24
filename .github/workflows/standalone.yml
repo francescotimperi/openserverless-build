@@ -81,19 +81,15 @@ jobs:
             echo "$GRAALVM_HOME/bin" >> $GITHUB_PATH
           fi
       - name: Verify GraalVM installation
-        shell: bash
         run: |
           java -version
-      - name: Install native-image component
-        if: ${{ matrix.os }} != 'windows-latest'        
+      - name: Install native-image component      
         run: |
           gu install native-image                                      
-      - name: Compile Standalone
-        shell: bash
+      - name: Compile Standalone        
         run: ./gradlew :core:standalone:build :core:standalone:copyRuntimeLibs 
         working-directory: openwhisk          
-      - name: Define executable name
-        shell: bash
+      - name: Define executable name        
         id: vars
         run: |
           platform="${RUNNER_OS,,}"
@@ -104,7 +100,6 @@ jobs:
           esac
           echo "name=$name" >> $GITHUB_OUTPUT        
       - name: Build Native Standalone
-        shell: bash
         run: |
           mkdir -p ${{ github.workspace }}/standalone/native && \
           native-image \
