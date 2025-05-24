@@ -46,7 +46,6 @@ jobs:
         run: |
           echo "IMG_TAG=$(git describe --tags --abbrev=0)" >> "$GITHUB_ENV"
       - name: Set variables for OS-specific GraalVM download
-        id: vars
         run: |
           if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
             echo "GRAALVM_URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graalvm_version }}/graalvm-ce-java11-linux-amd64-${{ matrix.graalvm_version }}.tar.gz" >> $GITHUB_ENV
