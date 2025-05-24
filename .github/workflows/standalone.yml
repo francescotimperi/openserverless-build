@@ -83,7 +83,6 @@ jobs:
         run: |
           java -version
           gu --version
-
       - name: Install native-image component
         shell: bash
         run: |
@@ -118,7 +117,6 @@ jobs:
           org.apache.openwhisk.standalone.StandaloneOpenWhisk
       - name: Upload native executable
         uses: actions/upload-artifact@v4
-        shell: bash
         with:
           name: ${{ steps.vars.outputs.name }}
           path: standalone/native        
