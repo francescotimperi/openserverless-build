@@ -31,11 +31,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-    steps:
-      - name: Remove unnecessary files
-        run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf "$AGENT_TOOLSDIRECTORY"    
+    steps:  
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -60,7 +56,7 @@ jobs:
       - name: Build Native Docker
         run: task native:standalone-build TAG="$IMG_TAG"
       - name: Upload native executable
-              uses: actions/upload-artifact@v3
-              with:
-                name: openserverless-standalone-${{ matrix.os }}-${{ env.IMG_TAG }}
-                path: standalone/exe        
+        uses: actions/upload-artifact@v3
+        with:
+          name: openserverless-standalone-${{ matrix.os }}-${{ env.IMG_TAG }}
+          path: standalone/exe        

@@ -107,7 +107,7 @@ tasks:
       -cp build/classes/scala/main:build/resources/main:build/dependency-libs/*
       -H:ConfigurationFileDirectories=$PWD/../standalone/graal-config
       -o $PWD/../exe/{{.NATIVE_IMAGE}}
-      org.apache.openwhisk.standalone.StandaloneOpenWhisk 
+      org.apache.openwhisk.standalone.StandaloneOpenWhisk
 
   native:standalone-run:
     dir: standalone/exe
@@ -278,6 +278,7 @@ tasks:
     dir: openwhisk
     cmds:
     - ./gradlew distDocker -PdockerMultiArchBuild=true -PdockerRegistry={{.DOCKER_REGISTRY}} -PdockerImagePrefix=openwhisk2 -PdockerImageTag={{.TAG}}
+
 
 
 

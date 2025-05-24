@@ -25,7 +25,7 @@ on:
     branches: [main]
 
 jobs:
-  distdocker:
+  check:
     name: Build OpenServerless OpenWhisk 2 based images
     runs-on: ubuntu-22.04
     steps:
