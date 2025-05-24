@@ -69,6 +69,7 @@ jobs:
             7z x graalvm.zip -o"$GRAALVM_DIR"
             echo "Setting JAVA_HOME to $PWD/$GRAALVM_DIR"
             echo "JAVA_HOME=$PWD/$GRAALVM_DIR" >> $GITHUB_ENV
+            echo "PATH=$PWD/$GRAALVM_DIR/bin:$PATH" >> $GITHUB_ENV
             echo "$PWD/$GRAALVM_DIR/bin" >> $GITHUB_PATH
           else
             mkdir -p $GRAALVM_HOME
