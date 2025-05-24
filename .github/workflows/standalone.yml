@@ -66,13 +66,12 @@ jobs:
           echo "Downloading GraalVM from $GRAALVM_URL"
           if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
             curl -L -o graalvm.zip "$GRAALVM_URL"
-            7z x graalvm.zip -otemp
-            mv temp/graalvm-ce-java11-${{ matrix.graalvm_version }}/* $GRAALVM_DIR
+            7z x graalvm.zip -o"$GRAALVM_DIR"
             ls -l $GRAALVM_DIR
-            echo "Setting JAVA_HOME to $PWD/$GRAALVM_DIR"
-            echo "JAVA_HOME=$PWD/$GRAALVM_DIR" >> $GITHUB_ENV
-            echo "PATH=$PWD/$GRAALVM_DIR/bin:$PATH" >> $GITHUB_ENV
-            echo "$PWD/$GRAALVM_DIR/bin" >> $GITHUB_PATH           
+            echo "Setting JAVA_HOME to $PWD/$GRAALVM_DIR/graalvm-ce-java11-${{ matrix.graalvm_version }}"
+            echo "JAVA_HOME=$PWD/$GRAALVM_DIR/graalvm-ce-java11-${{ matrix.graalvm_version }}" >> $GITHUB_ENV
+            echo "PATH=$PWD/$GRAALVM_DIR/graalvm-ce-java11-${{ matrix.graalvm_version }}/bin:$PATH" >> $GITHUB_ENV
+            echo "$PWD/$GRAALVM_DIR/graalvm-ce-java11-${{ matrix.graalvm_version }}/bin" >> $GITHUB_PATH           
           else
             mkdir -p $GRAALVM_HOME
             curl -L -o /tmp/graalvm.tar.gz "$GRAALVM_URL"
