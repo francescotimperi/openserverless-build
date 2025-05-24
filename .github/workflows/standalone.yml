@@ -60,20 +60,19 @@ jobs:
         with:          
           java-version: '17.0.8'        
           distribution: 'graalvm'
-      - name: Install native-image
-        run: gu install native-image          
+      #- name: Install native-image
+      #  run: gu install native-image          
       - name: Build Native Docker
         run: |
-          native-image
-          --initialize-at-run-time=io.netty     
-          --no-fallback --report-unsupported-elements-at-runtime
-          --trace-object-instantiation=ch.qos.logback.classic.Logger
-          --enable-url-protocols=http,https
-          -cp ${{ github.workspace }}/openwhisk/standalone/build/classes/scala/main:${{ github.workspace }}/openwhisk/standalone/build/resources/main:${{ github.workspace }}/openwhisk/standalone/build/dependency-libs/*
-          -H:ConfigurationFileDirectories=${{ github.workspace }}/standalone/graal-config
-          -o ${{ github.workspace }}/openwhisk/standalone/exe/openserverless-standalone-${{ matrix.os }}-${{ env.IMG_TAG }}
+          native-image \
+          --initialize-at-run-time=io.netty \
+          --no-fallback --report-unsupported-elements-at-runtime \
+          --trace-object-instantiation=ch.qos.logback.classic.Logger \
+          --enable-url-protocols=http,https \
+          -cp ${{ github.workspace }}/openwhisk/standalone/build/classes/scala/main:${{ github.workspace }}/openwhisk/standalone/build/resources/main:${{ github.workspace }}/openwhisk/standalone/build/dependency-libs/* \
+          -H:ConfigurationFileDirectories=${{ github.workspace }}/standalone/graal-config \
+          -o ${{ github.workspace }}/openwhisk/standalone/exe/openserverless-standalone-${{ matrix.os }}-${{ env.IMG_TAG }} \
           org.apache.openwhisk.standalone.StandaloneOpenWhisk
-        working-directory: openwhisk/standalone  
       - name: Upload native executable
         uses: actions/upload-artifact@v4
         with:
