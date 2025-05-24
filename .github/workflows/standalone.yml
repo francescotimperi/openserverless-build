@@ -78,7 +78,6 @@ jobs:
             echo "JAVA_HOME=$GRAALVM_HOME" >> $GITHUB_ENV
             echo "$GRAALVM_HOME/bin" >> $GITHUB_PATH
           fi
-        shell: bash
       - name: Verify GraalVM installation
         run: |
           java -version
