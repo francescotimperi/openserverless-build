@@ -30,7 +30,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [ubuntu-latest]
         graalvm_version: ['22.3.3']
     steps:  
       - name: Checkout
@@ -85,13 +85,7 @@ jobs:
         run: |
           java -version
       - name: Install native-image component
-        if:  ${{ matrix.os }} == 'windows-latest'
-        shell: pwsh
-        run: |
-          & "$env:JAVA_HOME\bin\gu.cmd" install native-image
-      - name: Install native-image component
-        if: ${{ matrix.os }} != 'windows-latest'
-        shell: bash
+        if: ${{ matrix.os }} != 'windows-latest'        
         run: |
           gu install native-image                                      
       - name: Compile Standalone
