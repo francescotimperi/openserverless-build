@@ -47,11 +47,11 @@ jobs:
           echo "IMG_TAG=$(git describe --tags --abbrev=0)" >> "$GITHUB_ENV"
       - name: Set variables for OS-specific GraalVM download
         run: |
-          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+          if ( [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; ) then
             echo "GRAALVM_URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graalvm_version }}/graalvm-ce-java11-linux-amd64-${{ matrix.graalvm_version }}.tar.gz" >> $GITHUB_ENV
             echo "GRAALVM_DIR=graalvm-ce-java11-linux-amd64-${{ matrix.graalvm_version }}" >> $GITHUB_ENV
             echo "GRAALVM_HOME=/opt/graalvm" >> $GITHUB_ENV
-          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+          elif ( [[ "${{ matrix.os }}" == "macos-latest" ]]; ) then
             echo "GRAALVM_URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graalvm_version }}/graalvm-ce-java11-darwin-amd64-${{ matrix.graalvm_version }}.tar.gz" >> $GITHUB_ENV
             echo "GRAALVM_DIR=graalvm-ce-java11-darwin-amd64-${{ matrix.graalvm_version }}" >> $GITHUB_ENV
             echo "GRAALVM_HOME=/opt/graalvm" >> $GITHUB_ENV
@@ -62,7 +62,7 @@ jobs:
       - name: Download and install GraalVM 11
         run: |
           echo "Downloading GraalVM from $GRAALVM_URL"
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          if ( [[ "${{ matrix.os }}" == "windows-latest" ]]; ) then
             curl -L -o graalvm.zip "$GRAALVM_URL"
             7z x graalvm.zip -o"$GRAALVM_DIR"
             echo "Setting JAVA_HOME to $PWD/$GRAALVM_DIR"
