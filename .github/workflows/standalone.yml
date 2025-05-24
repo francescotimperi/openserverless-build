@@ -31,6 +31,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
+        graalvm_version: ['22.3.3']
     steps:  
       - name: Checkout
         uses: actions/checkout@v2
@@ -44,37 +45,74 @@ jobs:
         if:  ${{ github.event_name != 'pull_request' }}
         run: |
           echo "IMG_TAG=$(git describe --tags --abbrev=0)" >> "$GITHUB_ENV"
-      - name: Set up JDK 11
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '11'
-      - name: Compile Standalone
-        run: ./gradlew :core:standalone:build
-        working-directory: openwhisk
-      - name: Standalone libs
-        run: ./gradlew :core:standalone:copyRuntimeLibs    
-        working-directory: openwhisk
-      - name: Set up JDK GRAALVM 17
-        uses: actions/setup-java@v4
-        with:          
-          java-version: '17.0.8'        
-          distribution: 'graalvm'
-      #- name: Install native-image
-      #  run: gu install native-image          
-      - name: Build Native Docker
+      - name: Set variables for OS-specific GraalVM download
+        id: vars
         run: |
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+            echo "GRAALVM_URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graalvm_version }}/graalvm-ce-java11-linux-amd64-${{ matrix.graalvm_version }}.tar.gz" >> $GITHUB_ENV
+            echo "GRAALVM_DIR=graalvm-ce-java11-linux-amd64-${{ matrix.graalvm_version }}" >> $GITHUB_ENV
+            echo "GRAALVM_HOME=/opt/graalvm" >> $GITHUB_ENV
+          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            echo "GRAALVM_URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graalvm_version }}/graalvm-ce-java11-darwin-amd64-${{ matrix.graalvm_version }}.tar.gz" >> $GITHUB_ENV
+            echo "GRAALVM_DIR=graalvm-ce-java11-darwin-amd64-${{ matrix.graalvm_version }}" >> $GITHUB_ENV
+            echo "GRAALVM_HOME=/opt/graalvm" >> $GITHUB_ENV
+          else
+            echo "GRAALVM_URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graalvm_version }}/graalvm-ce-java11-windows-amd64-${{ matrix.graalvm_version }}.zip" >> $GITHUB_ENV
+            echo "GRAALVM_DIR=graalvm-ce-java11-windows-amd64-${{ matrix.graalvm_version }}" >> $GITHUB_ENV
+          fi
+      - name: Download and install GraalVM 11
+        run: |
+          echo "Downloading GraalVM from $GRAALVM_URL"
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            curl -L -o graalvm.zip "$GRAALVM_URL"
+            7z x graalvm.zip -o"$GRAALVM_DIR"
+            echo "Setting JAVA_HOME to $PWD/$GRAALVM_DIR"
+            echo "JAVA_HOME=$PWD/$GRAALVM_DIR" >> $GITHUB_ENV
+            echo "$PWD/$GRAALVM_DIR\\bin" >> $GITHUB_PATH
+          else
+            mkdir -p $GRAALVM_HOME
+            curl -L -o /tmp/graalvm.tar.gz "$GRAALVM_URL"
+            tar -xvzf /tmp/graalvm.tar.gz --strip-components=1 -C "$GRAALVM_HOME"
+            echo "Setting JAVA_HOME to $GRAALVM_HOME"
+            echo "JAVA_HOME=$GRAALVM_HOME" >> $GITHUB_ENV
+            echo "$GRAALVM_HOME/bin" >> $GITHUB_PATH
+          fi
+        shell: bash
+      - name: Verify GraalVM installation
+        run: |
+          java -version
+          gu --version
+
+      - name: Install native-image component
+        run: |
+          gu install native-image                            
+      - name: Compile Standalone
+        run: ./gradlew :core:standalone:build :core:standalone:copyRuntimeLibs 
+        working-directory: openwhisk          
+      - name: Define executable name
+        id: vars
+        run: |
+          platform="${RUNNER_OS,,}"
+          platform="${platform}-${RUNNER_ARCH,,}"
+          name="openserverless-standalone-${platform}-${{ env.IMG_TAG }}"
+          case "${{ runner.os }}" in
+            Windows) name="${name}.exe" ;;
+          esac
+          echo "name=$name" >> $GITHUB_OUTPUT        
+      - name: Build Native Standalone
+        run: |
+          mkdir -p ${{ github.workspace }}/standalone/native && \
           native-image \
           --initialize-at-run-time=io.netty \
           --no-fallback --report-unsupported-elements-at-runtime \
           --trace-object-instantiation=ch.qos.logback.classic.Logger \
           --enable-url-protocols=http,https \
-          -cp ${{ github.workspace }}/openwhisk/standalone/build/classes/scala/main:${{ github.workspace }}/openwhisk/standalone/build/resources/main:${{ github.workspace }}/openwhisk/standalone/build/dependency-libs/* \
+          -cp ${{ github.workspace }}/openwhisk/core/standalone/build/classes/scala/main:${{ github.workspace }}/openwhisk/core/standalone/build/resources/main:${{ github.workspace }}/openwhisk/core/standalone/build/dependency-libs/* \
           -H:ConfigurationFileDirectories=${{ github.workspace }}/standalone/graal-config \
-          -o ${{ github.workspace }}/openwhisk/standalone/exe/openserverless-standalone-${{ matrix.os }}-${{ env.IMG_TAG }} \
+          -o ${{ github.workspace }}/standalone/native/${{ steps.vars.outputs.name }} \
           org.apache.openwhisk.standalone.StandaloneOpenWhisk
       - name: Upload native executable
         uses: actions/upload-artifact@v4
         with:
-          name: openserverless-standalone-${{ matrix.os }}-${{ env.IMG_TAG }}
-          path: openwhisk/standalone/exe        
+          name: ${{ steps.vars.outputs.name }}
+          path: standalone/native        
