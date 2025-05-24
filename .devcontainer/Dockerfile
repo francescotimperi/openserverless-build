@@ -52,13 +52,16 @@ RUN apt-get -y install protobuf-compiler
 # install graalvm
 ENV GRAALVM_HOME=/opt/graalvm
 ENV PATH=$GRAALVM_HOME/bin:$PATH
-ARG GRAALVM_VERSION=22.3.3  https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.3.3/graalvm-ce-java11-linux-amd64-22.3.3.tar.gz
+ENV GRAALVM_VERSION=jdk-17.0.9 
+
+#https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_linux-aarch64_bin.tar.gz
+#https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_linux-x64_bin.tar.gz
 
 RUN echo "TARGETPLATFORM is $TARGETPLATFORM"
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-      wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAALVM_VERSION/graalvm-ce-java11-linux-aarch64-$GRAALVM_VERSION.tar.gz -O /tmp/graalvm.tar.gz; \
+      wget https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_linux-aarch64_bin.tar.gz -O /tmp/graalvm.tar.gz; \
     elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-      wget https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-$GRAALVM_VERSION/graalvm-ce-java11-linux-amd64-$GRAALVM_VERSION.tar.gz -O /tmp/graalvm.tar.gz; \
+      wget https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_linux-x64_bin.tar.gz -O /tmp/graalvm.tar.gz; \
     else \
         echo "Unsupported platform: $TARGETPLATFORM"; \
         exit 1; \      
