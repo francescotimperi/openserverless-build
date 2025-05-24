@@ -30,7 +30,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest,windows-latest]
+        os: [windows-latest]
         graalvm_version: ['22.3.3']
     steps:  
       - name: Checkout
@@ -69,8 +69,7 @@ jobs:
             7z x graalvm.zip -o"$GRAALVM_DIR"
             echo "Setting JAVA_HOME to $PWD/$GRAALVM_DIR"
             echo "JAVA_HOME=$PWD/$GRAALVM_DIR" >> $GITHUB_ENV
-            echo "PATH=$PWD/$GRAALVM_DIR/bin:$PATH" >> $GITHUB_ENV
-            echo "$PWD/$GRAALVM_DIR/bin" >> $GITHUB_PATH
+            echo "PATH=$PWD/$GRAALVM_DIR/bin:$PATH" >> $GITHUB_ENV           
           else
             mkdir -p $GRAALVM_HOME
             curl -L -o /tmp/graalvm.tar.gz "$GRAALVM_URL"
