@@ -85,12 +85,12 @@ jobs:
         run: |
           java -version
       - name: Install native-image component
-        if:  ${{ matrix.os  == "windows-latest" }}
+        if:  ${{ matrix.os }} == 'windows-latest'
         shell: pwsh
         run: |
           gu install native-image
       - name: Install native-image component
-        if:  ${{ matrix.os  != "windows-latest" }}
+        if: ${{ matrix.os }} != 'windows-latest'
         shell: bash
         run: |
           gu install native-image                                      
