@@ -72,7 +72,14 @@ jobs:
             echo "JAVA_HOME=$PWD/$GRAALVM_DIR/graalvm-ce-java11-${{ matrix.graalvm_version }}" >> $GITHUB_ENV
             echo "PATH=$PWD/$GRAALVM_DIR/graalvm-ce-java11-${{ matrix.graalvm_version }}/bin:$PATH" >> $GITHUB_ENV
             echo "$PWD/$GRAALVM_DIR/graalvm-ce-java11-${{ matrix.graalvm_version }}/bin" >> $GITHUB_PATH           
-          else
+          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            mkdir -p $GRAALVM_HOME
+            curl -L -o /tmp/graalvm.tar.gz "$GRAALVM_URL"
+            tar -xvzf /tmp/graalvm.tar.gz --strip-components=1 -C "$GRAALVM_HOME"            
+            echo "Setting JAVA_HOME to $GRAALVM_HOME/Contents/Home"
+            echo "JAVA_HOME=$GRAALVM_HOME/Contents/Home" >> $GITHUB_ENV
+            echo "$GRAALVM_HOME/Contents/Home/bin" >> $GITHUB_PATH
+          else 
             mkdir -p $GRAALVM_HOME
             curl -L -o /tmp/graalvm.tar.gz "$GRAALVM_URL"
             tar -xvzf /tmp/graalvm.tar.gz --strip-components=1 -C "$GRAALVM_HOME"            

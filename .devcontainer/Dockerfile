@@ -52,7 +52,7 @@ RUN apt-get -y install protobuf-compiler
 # install graalvm
 ENV GRAALVM_HOME=/opt/graalvm
 ENV PATH=$GRAALVM_HOME/bin:$PATH
-ARG GRAALVM_VERSION=22.3.3  https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.3.3/graalvm-ce-java11-linux-amd64-22.3.3.tar.gz
+ARG GRAALVM_VERSION=22.3.3
 
 RUN echo "TARGETPLATFORM is $TARGETPLATFORM"
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
