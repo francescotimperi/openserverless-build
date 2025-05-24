@@ -84,9 +84,7 @@ jobs:
         shell: bash
         run: |
           java -version
-          gu --version
       - name: Install native-image component
-        shell: bash
         run: |
           gu install native-image                            
       - name: Compile Standalone
