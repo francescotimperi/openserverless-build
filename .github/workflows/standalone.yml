@@ -56,7 +56,7 @@ jobs:
       - name: Build Native Docker
         run: task native:standalone-build TAG="$IMG_TAG"
       - name: Upload native executable
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: openserverless-standalone-${{ matrix.os }}-${{ env.IMG_TAG }}
           path: standalone/exe        
