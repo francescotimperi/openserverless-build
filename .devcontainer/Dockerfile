@@ -41,7 +41,7 @@ RUN pip3 install --upgrade pip setuptools six
 RUN ln -sf /usr/bin/python3 /usr/bin/python ;\
     curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py ;\
     python get-pip.py ;\
-    python -m pip install ansible==2.8.18 pydocumentdb humanize requests
+    python -m pip install docker==5.0.0 ansible==4.1.0 jinja2==3.0.1 couchdb==1.2 httplib2==0.19.1 requests==2.25.1 six==1.16.0
 # docker
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu bionic stable" > /etc/apt/sources.list.d/docker.list ;\
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor > /usr/share/keyrings/docker-archive-keyring.gpg ;\
