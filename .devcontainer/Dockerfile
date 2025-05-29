@@ -52,7 +52,9 @@ RUN apt-get -y install protobuf-compiler
 # install graalvm
 ENV GRAALVM_HOME=/opt/graalvm
 ENV PATH=$GRAALVM_HOME/bin:$PATH
-ENV GRAALVM_VERSION=jdk-17.0.9 
+ENV GRAALVM_VERSION=jdk-17.0.9
+ENV WSK_VERSION=1.2.0
+
 
 #https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_linux-aarch64_bin.tar.gz
 #https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_linux-x64_bin.tar.gz
@@ -95,6 +97,17 @@ RUN curl -sL https://deb.nodesource.com/setup_22.x | bash ;\
 RUN sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
 # act github actions verifier
 RUN curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
+
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+      curl -sL https://github.com/apache/openwhisk-cli/releases/download/${WSK_VERSION}/OpenWhisk_CLI-${WSK_VERSION}-linux-arm64.tgz \
+      | tar xzvf - -C /usr/bin wsk; \
+    elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+      curl -sL https://github.com/apache/openwhisk-cli/releases/download/${WSK_VERSION}/OpenWhisk_CLI-${WSK_VERSION}-linux-amd64.tgz \
+      | tar xzvf - -C /usr/bin wsk; \
+    else \
+        echo "Unsupported platform: $TARGETPLATFORM"; \
+        exit 1; \
+    fi
 
 ENV HOME=/home/openserverless
 ENV ANSIBLE_CMD="ansible-playbook -i environments/local -e docker_image_prefix=testing"
