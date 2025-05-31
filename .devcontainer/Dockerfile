@@ -52,18 +52,18 @@ RUN apt-get -y install protobuf-compiler
 # install graalvm
 ENV GRAALVM_HOME=/opt/graalvm
 ENV PATH=$GRAALVM_HOME/bin:$PATH
-ENV GRAALVM_VERSION=jdk-17.0.9
+ENV GRAALVM_VERSION=jdk-21.0.2
 ENV WSK_VERSION=1.2.0
 
 
-#https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_linux-aarch64_bin.tar.gz
-#https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_linux-x64_bin.tar.gz
+#https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-21.0.2/graalvm-community-jdk-21.0.2_linux-aarch64_bin.tar.gz
+#https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-21.0.2/graalvm-community-jdk-21.0.2_linux-x64_bin.tar.gz
 
 RUN echo "TARGETPLATFORM is $TARGETPLATFORM"
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-      wget https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_linux-aarch64_bin.tar.gz -O /tmp/graalvm.tar.gz; \
+      wget https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-21.0.2/graalvm-community-jdk-21.0.2_linux-aarch64_bin.tar.gz -O /tmp/graalvm.tar.gz; \
     elif [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-      wget https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-17.0.9/graalvm-community-jdk-17.0.9_linux-x64_bin.tar.gz -O /tmp/graalvm.tar.gz; \
+      wget https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-21.0.2/graalvm-community-jdk-21.0.2_linux-x64_bin.tar.gz -O /tmp/graalvm.tar.gz; \
     else \
         echo "Unsupported platform: $TARGETPLATFORM"; \
         exit 1; \      
@@ -72,8 +72,6 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
     mkdir -p $GRAALVM_HOME && \
     tar -xvzf /tmp/graalvm.tar.gz --strip-components=1 -C $GRAALVM_HOME && \
     rm /tmp/graalvm.tar.gz && \
-    # Install Native Image
-    gu install native-image && \
     # Clean up
     apt-get clean
 
