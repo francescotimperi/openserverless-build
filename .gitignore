@@ -19,6 +19,7 @@ _*
 attic/
 .vscode/
 .metals/
+.idea/
 docker/
 enterprise/controller/lib/
 enterprise/controller/bin/
