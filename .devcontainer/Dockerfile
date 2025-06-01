@@ -16,7 +16,7 @@
 # under the License.
 #
 
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 LABEL maintainer="Michele Sciabarra michele@nuvolaris.io, Francesco Timperi Tiberi francesco.timperi@gmail.com"
 ARG TARGETPLATFORM
 
@@ -34,14 +34,14 @@ RUN apt-get update && apt-get -y upgrade &&\
     socat telnet inetutils-ping \
     unzip vim telnet less sudo git \
     python3 python3-pip gcc g++ make \
-    silversearcher-ag zip lsof
+    silversearcher-ag zip lsof netcat
 # install java (amazon corretto) and libs
 RUN pip3 install --upgrade pip setuptools six 
 # python2 stuff
 RUN ln -sf /usr/bin/python3 /usr/bin/python ;\
     curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py ;\
     python get-pip.py ;\
-    python -m pip install docker==5.0.0 ansible==4.1.0 jinja2==3.0.1 couchdb==1.2 httplib2==0.19.1 requests==2.25.1 six==1.16.0
+    python -m pip install docker==5.0.0 ansible==2.8.18 jinja2==3.0.1 couchdb==1.2 httplib2==0.19.1 requests==2.25.1 six==1.16.0 flake8
 # docker
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu bionic stable" > /etc/apt/sources.list.d/docker.list ;\
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor > /usr/share/keyrings/docker-archive-keyring.gpg ;\
@@ -110,7 +110,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
     fi
 
 ENV HOME=/home/openserverless
-ENV ANSIBLE_CMD="ansible-playbook -i environments/local -e docker_image_prefix=testing"
+ENV ANSIBLE_CMD="ansible-playbook -i environments/local -e docker_image_prefix=testing -e container_pool_akka_client=false"
 ENV GRADLE_PROJS_SKIP=""
 WORKDIR /home/openserverless
 ENTRYPOINT [ "/usr/bin/socat","UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=openserverless","UNIX-CONNECT:/var/run/docker-host.sock" ]    
