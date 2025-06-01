@@ -277,6 +277,3 @@ tasks:
     dir: openwhisk
     cmds:
     - ./gradlew distDocker -PdockerMultiArchBuild=true -PdockerRegistry={{.DOCKER_REGISTRY}} -PdockerImagePrefix=openwhisk2 -PdockerImageTag={{.TAG}}
-
-
-
