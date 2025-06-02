@@ -36,3 +36,4 @@ openwhisk-*/
 *.tar
 playground.*
 .secrets
+.DS_Store

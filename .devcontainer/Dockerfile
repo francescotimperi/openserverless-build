@@ -110,7 +110,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
     fi
 
 ENV HOME=/home/openserverless
-ENV ANSIBLE_CMD="ansible-playbook -i environments/local -e docker_image_prefix=testing -e container_pool_akka_client=false -e jmxremote_enabled=false -e elasticsearch.version=7.8.0"
+ENV ANSIBLE_CMD="ansible-playbook -i environments/local -e docker_image_prefix=testing -e container_pool_akka_client=false"
 ENV GRADLE_PROJS_SKIP=""
 WORKDIR /home/openserverless
 ENTRYPOINT [ "/usr/bin/socat","UNIX-LISTEN:/var/run/docker.sock,fork,mode=660,user=openserverless","UNIX-CONNECT:/var/run/docker-host.sock" ]    
