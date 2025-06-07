@@ -1,93 +1,100 @@
 {
-  "resources":{
-  "includes":[
-    {
-      "pattern":"META-INF/MANIFEST.MF"
-    }, 
-    {
-      "pattern":"akka-http-version.conf"
-    }, 
-    {
-      "pattern":"application.conf"
-    }, 
-    {
-      "pattern":"com/sun/jna/linux-aarch64/libjnidispatch.so"
-    }, 
-    {
-      "pattern":"git.properties"
-    }, 
-    {
-      "pattern":"library.properties"
-    }, 
-    {
-      "pattern":"logback-standalone.xml"
-    }, 
-    {
-      "pattern":"logback.xml"
-    }, 
-    {
-      "pattern":"logging.conf"
-    }, 
-    {
-      "pattern":"org/slf4j/impl/StaticLoggerBinder.class"
-    }, 
-    {
-      "pattern":"oshi.properties"
-    }, 
-    {
-      "pattern":"playground/actions/playground-delete.js"
-    }, 
-    {
-      "pattern":"playground/actions/playground-fetch.js"
-    }, 
-    {
-      "pattern":"playground/actions/playground-run.js"
-    }, 
-    {
-      "pattern":"playground/actions/playground-userpackage.js"
-    }, 
-    {
-      "pattern":"playground/ui/playgroundFunctions.js"
-    }, 
-    {
-      "pattern":"playground/ui/index.html"
-    },
-    {
-      "pattern":"playground/ui/playground.css"
-    },    
-    {
-      "pattern":"reference.conf"
-    }, 
-    {
-      "pattern":"runtimes.json"
-    }, 
-    {
-      "pattern":"s3-reference.conf"
-    }, 
-    {
-      "pattern":"standalone.conf"
-    }, 
-    {
-      "pattern":"version.conf"
-    },
-    {
-      "pattern":"swagger-ui/.*"
-    },
-    {
-      "pattern":"couch/.*"
-    },
-    {
-      "pattern":"createApi.zip"
-    },
-    {
-      "pattern":"deleteApi.zip"
-    },
-    {
-      "pattern":"getApi.zip"
-    },
-    {
-      "pattern":"grafana-config.zip"
-    }                    
-  ]},
-  "bundles":[]
+  "resources": {
+    "includes": [
+      {
+        "pattern": "java.base:\\Qjdk/internal/icu/impl/data/icudt67b/nfkc.nrm\\E"
+      },
+      {
+        "pattern": "java.base:\\Qsun/net/www/content-types.properties\\E"
+      },
+      {
+        "pattern": "META-INF/MANIFEST.MF"
+      },
+      {
+        "pattern": "akka-http-version.conf"
+      },
+      {
+        "pattern": "application.conf"
+      },
+      {
+        "pattern": "com/sun/jna/linux-aarch64/libjnidispatch.so"
+      },
+      {
+        "pattern": "git.properties"
+      },
+      {
+        "pattern": "library.properties"
+      },
+      {
+        "pattern": "logback-standalone.xml"
+      },
+      {
+        "pattern": "logback.xml"
+      },
+      {
+        "pattern": "logging.conf"
+      },
+      {
+        "pattern": "org/slf4j/impl/StaticLoggerBinder.class"
+      },
+      {
+        "pattern": "oshi.properties"
+      },
+      {
+        "pattern": "playground/actions/playground-delete.js"
+      },
+      {
+        "pattern": "playground/actions/playground-fetch.js"
+      },
+      {
+        "pattern": "playground/actions/playground-run.js"
+      },
+      {
+        "pattern": "playground/actions/playground-userpackage.js"
+      },
+      {
+        "pattern": "playground/ui/playgroundFunctions.js"
+      },
+      {
+        "pattern": "playground/ui/index.html"
+      },
+      {
+        "pattern": "playground/ui/playground.css"
+      },
+      {
+        "pattern": "reference.conf"
+      },
+      {
+        "pattern": "runtimes.json"
+      },
+      {
+        "pattern": "s3-reference.conf"
+      },
+      {
+        "pattern": "standalone.conf"
+      },
+      {
+        "pattern": "version.conf"
+      },
+      {
+        "pattern": "swagger-ui/.*"
+      },
+      {
+        "pattern": "couch/.*"
+      },
+      {
+        "pattern": "createApi.zip"
+      },
+      {
+        "pattern": "deleteApi.zip"
+      },
+      {
+        "pattern": "getApi.zip"
+      },
+      {
+        "pattern": "grafana-config.zip"
+      }
+    ]
+  },
+  "bundles": []
 }
