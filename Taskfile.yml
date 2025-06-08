@@ -104,7 +104,6 @@ tasks:
       --no-fallback --report-unsupported-elements-at-runtime
       --trace-object-instantiation=ch.qos.logback.classic.Logger
       --enable-url-protocols=http,https
-      -march=native
       -cp build/classes/scala/main:build/resources/main:build/dependency-libs/*
       -H:ConfigurationFileDirectories=$PWD/../../../standalone/graal-config
       -o $PWD/../../../standalone/dist/{{.EXEC_NAME}}
@@ -115,7 +114,7 @@ tasks:
   native:standalone-run:
     dir: standalone/dist
     cmds:
-    - ./openwhisk-standalone -Xmx2g -Dwhisk.standalone.host.name="0.0.0.0" -Dwhisk.standalone.host.internal="$(hostname -f)" -Dkamon.auto-start=no --no-browser
+    - ./openwhisk-standalone -Xmx2g -Dwhisk.standalone.host.name="0.0.0.0" -Dwhisk.standalone.host.internal="$(hostname -f)" -Dkamon.auto-start=no -Djna.nosys=true --no-browser
     env:
       KAMON_ENABLED: false
 
@@ -291,7 +290,16 @@ tasks:
        -p 3232:3232 -p 3233:3233
        -v /var/run/docker.sock:/var/run/docker.sock
        {{.DOCKER_REGISTRY}}/openwhisk2/standalone:{{.TAG}}
-    interactive: true   
+    interactive: true
+
+  run:standalone-docker-official:
+    cmds:
+      - >
+       docker run -ti
+       -p 3232:3232 -p 3233:3233
+       -v /var/run/docker.sock:/var/run/docker.sock
+       apache/openserverless-wsk-standalone:{{.TAG}}
+    interactive: true        
 
   run:standalone:
     deps:

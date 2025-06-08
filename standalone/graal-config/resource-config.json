@@ -20,6 +20,21 @@
         "pattern": "com/sun/jna/linux-aarch64/libjnidispatch.so"
       },
       {
+        "pattern": "com/sun/jna/darwin-x86-64/libjnidispatch.jnilib"
+      },
+      {
+        "pattern": "com/sun/jna/linux-x86-64/libjnidispatch.so"
+      },
+      {
+        "pattern": "com/sun/jna/win32-x86-64/libjnidispatch.dll"
+      },
+      {
+        "pattern": "com/sun/jna/darwin-aarch64/libjnidispatch.jnilib"
+      },
+      {
+        "pattern": "com/sun/jna/win32-x86/libjnidispatch.dll"
+      },
+      {
         "pattern": "git.properties"
       },
       {
@@ -41,25 +56,7 @@
         "pattern": "oshi.properties"
       },
       {
-        "pattern": "playground/actions/playground-delete.js"
-      },
-      {
-        "pattern": "playground/actions/playground-fetch.js"
-      },
-      {
-        "pattern": "playground/actions/playground-run.js"
-      },
-      {
-        "pattern": "playground/actions/playground-userpackage.js"
-      },
-      {
-        "pattern": "playground/ui/playgroundFunctions.js"
-      },
-      {
-        "pattern": "playground/ui/index.html"
-      },
-      {
-        "pattern": "playground/ui/playground.css"
+        "pattern": "playground/.*"
       },
       {
         "pattern": "reference.conf"
@@ -72,6 +69,9 @@
       },
       {
         "pattern": "standalone.conf"
+      },
+      {
+        "pattern": "standalone-kcf.conf"
       },
       {
         "pattern": "version.conf"
@@ -93,6 +93,12 @@
       },
       {
         "pattern": "grafana-config.zip"
+      },
+      {
+        "pattern": "apiv1swagger.json"
+      },
+      {
+        "pattern": "infoswagger.json"
       }
     ]
   },
