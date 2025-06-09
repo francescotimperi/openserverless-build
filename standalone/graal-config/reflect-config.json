@@ -3448,5 +3448,15 @@
     "allDeclaredConstructors": true,
     "allDeclaredFields": true,
     "allDeclaredMethods": true
+  },
+  {
+    "name": "oshi.software.os.mac.MacOperatingSystem",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "oshi.jna.platform.linux.LinuxLibc",
+    "allDeclaredMethods": true,
+    "allPublicMethods": true
   }
 ]

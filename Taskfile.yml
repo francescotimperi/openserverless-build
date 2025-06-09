@@ -100,7 +100,7 @@ tasks:
     dir: openwhisk/core/standalone
     cmds:
     - native-image
-      --initialize-at-run-time=io.netty,akka.protobufv3.internal.UnsafeUtil      
+      --initialize-at-run-time=io.netty,akka.protobufv3.internal.UnsafeUtil,oshi.software.os     
       --no-fallback --report-unsupported-elements-at-runtime
       --trace-object-instantiation=ch.qos.logback.classic.Logger
       --enable-url-protocols=http,https
